@@ -426,6 +426,20 @@ the file, saving afterwards."
   (setq inhibit-read-only nil)
   (todotxt-jump-to-item item))
 
+(defun todotxt-add-item-any-buffer (item)
+  "From any other buffer, prompt for an item to add to the todo
+list and append it to the file, saving afterwards."
+  (interactive "sItem to add: ")
+  (with-current-buffer (find-file-noselect todotxt-file)
+    (goto-char (point-max))
+    (if (not (equal 0 (current-column))) (insert "\n"))
+    (insert (concat
+             (if todotxt-use-creation-dates
+                 (concat (todotxt-get-formatted-date) " "))
+             item "\n"))
+    (save-buffer)
+    (message (concat "Todo inserted at the end of " todotxt-file))))
+
 (defun todotxt-add-priority ()
   "Prompts for a priority from A-Z to be added to the current
 item.  If the item already has a priority, it will be replaced.
@@ -437,19 +451,19 @@ removed."
   (let ((priority (read-from-minibuffer "Priority: ")))
     (if (or (and (string-match "[A-Z]" priority) (equal (length priority) 1))
             (equal priority ""))
-      (save-excursion
-        (setq inhibit-read-only 't)
-        (if (todotxt-get-priority (todotxt-get-current-line-as-string))
-            (progn
-              (beginning-of-line)
-              (delete-char 4)))
-        (if (not (equal priority ""))
-            (progn
-              (beginning-of-line)
-              (insert (concat "(" (upcase priority) ") "))
-              (setq inhibit-read-only nil)))
-        (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-        (if todotxt-save-after-change (save-buffer)))
+        (save-excursion
+          (setq inhibit-read-only 't)
+          (if (todotxt-get-priority (todotxt-get-current-line-as-string))
+              (progn
+                (beginning-of-line)
+                (delete-char 4)))
+          (if (not (equal priority ""))
+              (progn
+                (beginning-of-line)
+                (insert (concat "(" (upcase priority) ") "))
+                (setq inhibit-read-only nil)))
+          (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+          (if todotxt-save-after-change (save-buffer)))
       (error "%s is not a valid priority.  Try a letter between A and Z." priority))))
 
 (defun todotxt-edit-item ()
