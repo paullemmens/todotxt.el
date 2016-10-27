@@ -153,8 +153,7 @@ performed.  Defaults to 't."
   "Major mode for working with todo.txt files. \\{todotxt-mode-map}"
   (setq font-lock-defaults '(todotxt-highlight-regexps))
   (setq goal-column 0)
-  (auto-revert-mode)
-  (setq buffer-read-only t))
+  (auto-revert-mode))
 
 ;; Setup key map
 (define-key todotxt-mode-map (kbd "l")   'todotxt-unhide-all)      ; (L)ist
@@ -318,11 +317,10 @@ resides."
         (endrecfun 'end-of-line))
     (let ((origin (point)))
       (goto-char (point-min))
-      (setq inhibit-read-only 't)
       (sort-subr nil nextrecfun endrecfun sort-key-fun)
       (todotxt-apply-active-filters)
       (goto-char origin))
-    (setq inhibit-read-only nil)))
+    ))
 
 (defun todotxt-get-formatted-date ()
   "Returns a string with the date formatted in standard todo.txt
@@ -366,12 +364,12 @@ from 'todotxt-file'."
     (if (equal win nil)
         (progn
           (let* ((height (nth 3 (window-edges)))
-            (nheight (- height (/ height 3)))
-            (win (split-window (selected-window) nheight)))
-          (select-window win)
-          (switch-to-buffer buf)
-          (todotxt-mode)
-          (todotxt-prioritize 'todotxt-get-due-priority-sort-key)))
+                 (nheight (- height (/ height 3)))
+                 (win (split-window (selected-window) nheight)))
+            (select-window win)
+            (switch-to-buffer buf)
+            (todotxt-mode)
+            (todotxt-prioritize 'todotxt-get-due-priority-sort-key)))
       (progn
         (select-window win)
         (select-frame-set-input-focus (selected-frame))))
@@ -380,15 +378,12 @@ from 'todotxt-file'."
 (defun todotxt-revert ()
   "Revert the contents of the todotxt buffer."
   (interactive)
-  (revert-buffer nil 't 't)
-  (setq buffer-read-only 't))
+  (revert-buffer nil 't 't))
 
 (defun todotxt-undo ()
   "Undo the last changes to the buffer"
   (interactive)
-  (setq inhibit-read-only 't)
-  (undo)
-  (setq inhibit-read-only 'nil))
+  (undo))
 
 (defun todotxt-show-incomplete ()
   "Filter out complete items from the todo list."
@@ -399,32 +394,28 @@ from 'todotxt-file'."
   "Deletes the current item without passing Go or collecting
 $200"
   (interactive)
-  (setq inhibit-read-only 't)
   (beginning-of-line)
-  ; So begins the dance to get the /real/ beginning of line
-  ; TODO: if this is needed elsewhere, pull it up into a function
+                                        ; So begins the dance to get the /real/ beginning of line
+                                        ; TODO: if this is needed elsewhere, pull it up into a function
   (forward-char)
   (backward-char)
   (let ((beg (point)))
     (end-of-line)
     (forward-char)
-    (delete-region beg (point)))
-  (setq inhibit-read-only nil))
+    (delete-region beg (point))))
 
-(defun todotxt-add-item (item)
-  "Prompt for an item to add to the todo list and append it to
+  (defun todotxt-add-item (item)
+    "Prompt for an item to add to the todo list and append it to
 the file, saving afterwards."
-  (interactive "sItem to add: ")
-  (setq inhibit-read-only 't)
-  (goto-char (point-max))
-  (insert (concat
-           (if todotxt-use-creation-dates
-               (concat (todotxt-get-formatted-date) " "))
-           item "\n"))
-  (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-  (if todotxt-save-after-change (save-buffer))
-  (setq inhibit-read-only nil)
-  (todotxt-jump-to-item item))
+    (interactive "sItem to add: ")
+    (goto-char (point-max))
+    (insert (concat
+             (if todotxt-use-creation-dates
+                 (concat (todotxt-get-formatted-date) " "))
+             item "\n"))
+    (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+    (if todotxt-save-after-change (save-buffer))
+    (todotxt-jump-to-item item))
 
 (defun todotxt-add-item-any-buffer (item)
   "From any other buffer, prompt for an item to add to the todo
@@ -452,7 +443,6 @@ removed."
     (if (or (and (string-match "[A-Z]" priority) (equal (length priority) 1))
             (equal priority ""))
         (save-excursion
-          (setq inhibit-read-only 't)
           (if (todotxt-get-priority (todotxt-get-current-line-as-string))
               (progn
                 (beginning-of-line)
@@ -460,49 +450,42 @@ removed."
           (if (not (equal priority ""))
               (progn
                 (beginning-of-line)
-                (insert (concat "(" (upcase priority) ") "))
-                (setq inhibit-read-only nil)))
+                (insert (concat "(" (upcase priority) ") "))))
           (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
           (if todotxt-save-after-change (save-buffer)))
-      (error "%s is not a valid priority.  Try a letter between A and Z." priority))))
+      (error "%s is not a valid priority.  Try a letter between A and Z" priority))))
 
-(defun todotxt-edit-item ()
-  (interactive)
-  (save-excursion
-    (let ((new-text (read-from-minibuffer "Edit: " (todotxt-get-current-line-as-string))))
-      (beginning-of-line)
-      (setq inhibit-read-only 't)
-      (kill-line)
-      (insert new-text)
-      (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-      (if todotxt-save-after-change (save-buffer))
-      (setq inhibit-read-only nil))))
+    (defun todotxt-edit-item ()
+      (interactive)
+      (save-excursion
+        (let ((new-text (read-from-minibuffer "Edit: " (todotxt-get-current-line-as-string))))
+          (beginning-of-line)
+          (kill-line)
+          (insert new-text)
+          (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+          (if todotxt-save-after-change (save-buffer)))))
 
-(defun todotxt-tag-item ()
-  (interactive)
-  (let* ((new-tag (completing-read "Tags: " (todotxt-get-tag-completion-list-from-string
-                                             (concat (todotxt-archive-file-contents) (buffer-string)))))
-         (new-text (concat (todotxt-get-current-line-as-string) " " new-tag)))
-    (beginning-of-line)
-    (setq inhibit-read-only 't)
-    (kill-line)
-    (insert new-text)
-    (if todotxt-save-after-change (save-buffer))
-    (setq inhibit-read-only nil)))
+    (defun todotxt-tag-item ()
+      (interactive)
+      (let* ((new-tag (completing-read "Tags: " (todotxt-get-tag-completion-list-from-string
+                                                 (concat (todotxt-archive-file-contents) (buffer-string)))))
+             (new-text (concat (todotxt-get-current-line-as-string) " " new-tag)))
+        (beginning-of-line)
+        (kill-line)
+        (insert new-text)
+        (if todotxt-save-after-change (save-buffer))))
 
-(defun todotxt-add-due-date ()
-  (interactive)
-  (let* ((current-line (todotxt-get-current-line-as-string))
-        (current-date (todotxt-get-variable current-line "due"))
-        (date (org-read-date))
-        (new-line (todotxt-set-variable current-line "due" date)))
-    (beginning-of-line)
-    (setq inhibit-read-only 't)
-    (kill-line)
-    (insert new-line)
-    (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-    (if todotxt-save-after-change (save-buffer))
-    (setq inhibit-read-only nil)))
+    (defun todotxt-add-due-date ()
+      (interactive)
+      (let* ((current-line (todotxt-get-current-line-as-string))
+             (current-date (todotxt-get-variable current-line "due"))
+             (date (org-read-date))
+             (new-line (todotxt-set-variable current-line "due" date)))
+        (beginning-of-line)
+        (kill-line)
+        (insert new-line)
+        (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+        (if todotxt-save-after-change (save-buffer))))
 
 (defun todotxt-archive-file-name ()
   (concat (file-name-directory todotxt-file) "/done.txt"))
@@ -518,7 +501,6 @@ removed."
   (save-excursion
     (remove-overlays)
     (goto-char (point-min))
-    (setq inhibit-read-only 't)
     (while (progn
              (if (and (not (todotxt-line-empty-p)) (todotxt-complete-p))
                  (progn
@@ -526,13 +508,12 @@ removed."
                    (let ((beg (point)))
                      (forward-line)
                      (append-to-file beg (point) (todotxt-archive-file-name)))
-                     (previous-line)
-                     (kill-line 1)
+                   (previous-line)
+                   (kill-line 1)
                    't)
                (equal (forward-line) 0))))
     (if todotxt-save-after-change (save-buffer))
-    (todotxt-apply-active-filters)
-    (setq inhibit-read-only nil)))
+    (todotxt-apply-active-filters)))
 
 (defun todotxt-bury ()
   (interactive)
@@ -575,7 +556,6 @@ accordance with the spec, this also adds a completion date to
 completed items, and removes it if the item is being change to a
 'not completed' state."
   (interactive)
-  (setq inhibit-read-only 't)
   (if (todotxt-complete-p)
       (progn
         (beginning-of-line)
@@ -589,16 +569,15 @@ completed items, and removes it if the item is being change to a
                 (delete-char 11)))))
     (progn
       (beginning-of-line)
-      ; This isn't in the spec, but the CLI version removes priorities
-      ; upon completion.  It's problematic, because there's no good
-      ; way to put them back if you toggle completion back to "not
-      ; done".
+                                        ; This isn't in the spec, but the CLI version removes priorities
+                                        ; upon completion.  It's problematic, because there's no good
+                                        ; way to put them back if you toggle completion back to "not
+                                        ; done".
       (if (todotxt-get-priority (todotxt-get-current-line-as-string))
-              (delete-char 4))
+          (delete-char 4))
       (insert (concat "x " (todotxt-get-formatted-date) " "))
       (beginning-of-line)))
   (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-  (setq inhibit-read-only nil)
   (if todotxt-save-after-change (save-buffer)))
 
 (provide 'todotxt)
