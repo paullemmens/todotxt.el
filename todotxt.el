@@ -424,9 +424,15 @@ list and append it to the file, saving afterwards."
   (with-current-buffer (find-file-noselect todotxt-file)
     (goto-char (point-max))
     (if (not (equal 0 (current-column))) (insert "\n"))
+    (setq priority
+          (if (todotxt-get-priority item)
+              (substring item 0 4)))
+    (setq item (replace-regexp-in-string "\\(([A-Z])\\) " "" item))
     (insert (concat
+             priority
              (if todotxt-use-creation-dates
-                 (concat (todotxt-get-formatted-date) " "))
+                 (concat
+                  (todotxt-get-formatted-date) " "))
              item "\n"))
     (save-buffer)
     (message (concat "Todo inserted at the end of " todotxt-file))))
