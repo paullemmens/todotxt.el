@@ -156,27 +156,28 @@ performed.  Defaults to 't."
   (auto-revert-mode))
 
 ;; Setup key map
-(define-key todotxt-mode-map (kbd "l")   'todotxt-unhide-all)      ; (L)ist
-(define-key todotxt-mode-map (kbd "i")   'todotxt-show-incomplete) ; list (I)ncomplete
-(define-key todotxt-mode-map (kbd "c")   'todotxt-complete-toggle) ; (C)omplete item
-(define-key todotxt-mode-map (kbd "N")   'todotxt-nuke-item)       ; (N)uke item
-(define-key todotxt-mode-map (kbd "a")   'todotxt-add-item)        ; (A)dd item
-(define-key todotxt-mode-map (kbd "q")   'todotxt-bury)            ; (Q)uit
-(define-key todotxt-mode-map (kbd "r")   'todotxt-add-priority)    ; Add p(r)iority
-(define-key todotxt-mode-map (kbd "A")   'todotxt-archive)         ; (A)rchive completed items
-(define-key todotxt-mode-map (kbd "e")   'todotxt-edit-item)       ; (E)dit item
-(define-key todotxt-mode-map (kbd "t")   'todotxt-tag-item)        ; (T)ag item
-(define-key todotxt-mode-map (kbd "d")   'todotxt-add-due-date)    ; (D)ue date
-(define-key todotxt-mode-map (kbd "/")   'todotxt-filter-for)      ;
-(define-key todotxt-mode-map (kbd "\\")  'todotxt-filter-out)      ;
-(define-key todotxt-mode-map (kbd "g")   'todotxt-revert)          ; Revert the buffer
-(define-key todotxt-mode-map (kbd "s")   'save-buffer)             ; (S)ave
-(define-key todotxt-mode-map (kbd "u")   'todotxt-undo)            ; (U)ndo
-(define-key todotxt-mode-map (kbd "n")   'next-line)               ; (N)ext
-(define-key todotxt-mode-map (kbd "p")   'previous-line)           ; (P)revious
-(define-key todotxt-mode-map (kbd "j")   'next-line)               ; Vi Binding
-(define-key todotxt-mode-map (kbd "k")   'previous-line)           ; Vi Binding
-(define-key todotxt-mode-map (kbd "?")   'describe-mode)           ; Help!
+;; FIXME: remove permanently because these keymaps interfere w/ evil/vim.
+;; (define-key todotxt-mode-map (kbd "l")   'todotxt-unhide-all)      ; (L)ist
+;; (define-key todotxt-mode-map (kbd "i")   'todotxt-show-incomplete) ; list (I)ncomplete
+;; (define-key todotxt-mode-map (kbd "c")   'todotxt-complete-toggle) ; (C)omplete item
+;; (define-key todotxt-mode-map (kbd "N")   'todotxt-nuke-item)       ; (N)uke item
+;; (define-key todotxt-mode-map (kbd "a")   'todotxt-add-item)        ; (A)dd item
+;; (define-key todotxt-mode-map (kbd "q")   'todotxt-bury)            ; (Q)uit
+;; (define-key todotxt-mode-map (kbd "r")   'todotxt-add-priority)    ; Add p(r)iority
+;; (define-key todotxt-mode-map (kbd "A")   'todotxt-archive)         ; (A)rchive completed items
+;; (define-key todotxt-mode-map (kbd "e")   'todotxt-edit-item)       ; (E)dit item
+;; (define-key todotxt-mode-map (kbd "t")   'todotxt-tag-item)        ; (T)ag item
+;; (define-key todotxt-mode-map (kbd "d")   'todotxt-add-due-date)    ; (D)ue date
+;; (define-key todotxt-mode-map (kbd "/")   'todotxt-filter-for)      ;
+;; (define-key todotxt-mode-map (kbd "\\")  'todotxt-filter-out)      ;
+;; (define-key todotxt-mode-map (kbd "g")   'todotxt-revert)          ; Revert the buffer
+;; (define-key todotxt-mode-map (kbd "s")   'save-buffer)             ; (S)ave
+;; (define-key todotxt-mode-map (kbd "u")   'todotxt-undo)            ; (U)ndo
+;; (define-key todotxt-mode-map (kbd "n")   'next-line)               ; (N)ext
+;; (define-key todotxt-mode-map (kbd "p")   'previous-line)           ; (P)revious
+;; (define-key todotxt-mode-map (kbd "j")   'next-line)               ; Vi Binding
+;; (define-key todotxt-mode-map (kbd "k")   'previous-line)           ; Vi Binding
+;; (define-key todotxt-mode-map (kbd "?")   'describe-mode)           ; Help!
 
 ;; Utility functions
 (defun todotxt-current-line-re-match (re)
