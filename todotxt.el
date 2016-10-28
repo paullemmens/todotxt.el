@@ -369,7 +369,8 @@ from 'todotxt-file'."
             (select-window win)
             (switch-to-buffer buf)
             (todotxt-mode)
-            (todotxt-prioritize 'todotxt-get-due-priority-sort-key)))
+            (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+            (goto-char (point-max))))
       (progn
         (select-window win)
         (select-frame-set-input-focus (selected-frame))))
@@ -404,18 +405,18 @@ $200"
     (forward-char)
     (delete-region beg (point))))
 
-  (defun todotxt-add-item (item)
-    "Prompt for an item to add to the todo list and append it to
+(defun todotxt-add-item (item)
+  "Prompt for an item to add to the todo list and append it to
 the file, saving afterwards."
-    (interactive "sItem to add: ")
-    (goto-char (point-max))
-    (insert (concat
-             (if todotxt-use-creation-dates
-                 (concat (todotxt-get-formatted-date) " "))
-             item "\n"))
-    (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
-    (if todotxt-save-after-change (save-buffer))
-    (todotxt-jump-to-item item))
+  (interactive "sItem to add: ")
+  (goto-char (point-max))
+  (insert (concat
+           (if todotxt-use-creation-dates
+               (concat (todotxt-get-formatted-date) " "))
+           item "\n"))
+  (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
+  (if todotxt-save-after-change (save-buffer))
+  (todotxt-jump-to-item item))
 
 (defun todotxt-add-item-any-buffer (item)
   "From any other buffer, prompt for an item to add to the todo
@@ -575,10 +576,10 @@ completed items, and removes it if the item is being change to a
                 (delete-char 11)))))
     (progn
       (beginning-of-line)
-                                        ; This isn't in the spec, but the CLI version removes priorities
-                                        ; upon completion.  It's problematic, because there's no good
-                                        ; way to put them back if you toggle completion back to "not
-                                        ; done".
+      ;; This isn't in the spec, but the CLI version removes priorities
+      ;; upon completion.  It's problematic, because there's no good
+      ;; way to put them back if you toggle completion back to "not
+      ;; done".
       (if (todotxt-get-priority (todotxt-get-current-line-as-string))
           (delete-char 4))
       (insert (concat "x " (todotxt-get-formatted-date) " "))
