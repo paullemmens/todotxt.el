@@ -158,8 +158,7 @@ performed.  Defaults to 't."
         (,todotxt-priority-a-regexp 1 todotxt-priority-a-face t)
         (,todotxt-priority-b-regexp 1 todotxt-priority-b-face t)
         (,todotxt-priority-c-regexp 1 todotxt-priority-c-face t)
-        (,todotxt-date-face 1 todotxt-date-face t)
-	))
+        (,todotxt-date-face 1 todotxt-date-face t)))
 
 ;; Setup a major mode for todotxt
 (define-derived-mode todotxt-mode text-mode "todotxt"
