@@ -98,7 +98,7 @@ performed.  Defaults to 't."
 (setq todotxt-priority-b-regexp "^\\((B)\\) .*?$")
 (setq todotxt-priority-c-regexp "^\\((C)\\) .*?$")
 (setq todotxt-variable-regexp ":\\([^\s]+\\)")
-(setq todotxt-date-regexp "^[0-9]+-[0-9]+-[0-9]+")
+(setq todotxt-date-regexp "[0-9]+-[0-9]+-[0-9]+")
 
 (setq todotxt-active-filters '())
 
@@ -142,9 +142,9 @@ performed.  Defaults to 't."
   "Todotxt mode face used for tasks with a priority of C.")
 
 (defface todotxt-date-face '(
-  (((class color) (background dark)) (:foreground "grey80"))
-  (((class color) (background light)) (:foreground "grey10"))
-  (t (:bold t)))
+  (((class color) (background dark)) (:foreground "cornflower blue"))
+  (((class color) (background light)) (:foreground "cornflower blue"))
+  (t (:bold nil)))
   "Todotxt mode face used for tasks with dates."
   :group 'todotxt-highlighting-faces)
 
@@ -158,7 +158,7 @@ performed.  Defaults to 't."
         (,todotxt-priority-a-regexp 1 todotxt-priority-a-face t)
         (,todotxt-priority-b-regexp 1 todotxt-priority-b-face t)
         (,todotxt-priority-c-regexp 1 todotxt-priority-c-face t)
-        (,todotxt-date-face 1 todotxt-date-face t)))
+        (,todotxt-date-regexp       0 todotxt-date-face t)))
 
 ;; Setup a major mode for todotxt
 (define-derived-mode todotxt-mode text-mode "todotxt"
