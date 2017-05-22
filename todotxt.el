@@ -541,8 +541,7 @@ removed."
 
 (defun todotxt-bury ()
   (interactive)
-  ;; (bury-buffer)
-  ;; (delete-window))
+  (todotxt-unhide-all)
   (if todotxt-save-after-change (save-buffer))
   (kill-buffer-and-window))
 
