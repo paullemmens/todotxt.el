@@ -163,6 +163,7 @@ performed.  Defaults to 't."
 ;; Setup a major mode for todotxt
 (define-derived-mode todotxt-mode text-mode "todotxt"
   "Major mode for working with todo.txt files. \\{todotxt-mode-map}"
+  (add-hook 'todotxt-mode-hook 'turn-off-auto-fill)
   (setq font-lock-defaults '(todotxt-highlight-regexps))
   (setq goal-column 0)
   (auto-revert-mode))
