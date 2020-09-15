@@ -431,8 +431,8 @@ the file, saving afterwards."
   (todotxt-prioritize 'todotxt-get-due-priority-sort-key)
   (if todotxt-save-after-change
       (progn
-        (save-buffer)
-        (todotxt-unhide-all)))
+        (todotxt-unhide-all)
+        (save-buffer)))
   (todotxt-jump-to-item item))
 
 (defun todotxt-add-item-any-buffer (item)
@@ -454,6 +454,7 @@ list and append it to the file, saving afterwards."
              item "\n"))
     (todotxt-unhide-all)
     (save-buffer)
+    (kill-buffer (current-buffer))
     (message (concat "Todo inserted at the end of " todotxt-file))))
 
 (defun todotxt-add-priority ()
